@@ -23,3 +23,16 @@ def category_list(request):
     return Response(serializer.data)
 
 # did cat detail 47 45
+@api_view(['POST'])
+def add_to_cart(request):
+    cart_code = request.data.get("cart_code")
+    product_id = request.data.get("product_id")
+
+    cart = Cart.objects.get_or_create(cart_code=cart_code)
+    product = Product.objects.get(id=product_id)
+
+    cartitem = CartItem.objects.get_create(product=product, cart=cart)
+    cartitem.quantity = 1
+    cartitem.save()
+
+    
